@@ -13,7 +13,7 @@ export default function ChatBox() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      text: "👋 Hi! I'm your coding assistant. Ask me anything code-related!",
+      text: "👋 Hi! I'm your coding assistant CodeMate. Ask me anything code-related!",
     },
   ]);
   const [input, setInput] = useState("");
