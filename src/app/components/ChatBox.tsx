@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import MessageBubble from "./MessageBubble"; // ✅ Adjust path if needed
+import MessageBubble from "./MessageBubble";
+import { getBotResponse } from "../utils/botLogic"; 
 
 interface Message {
   role: "user" | "assistant";
@@ -10,20 +11,22 @@ interface Message {
 
 export default function ChatBox() {
   const [messages, setMessages] = useState<Message[]>([
-    { role: "assistant", text: "Hi! I'm here to help you with coding. Ask me anything!" },
+    {
+      role: "assistant",
+      text: "👋 Hi! I'm your coding assistant. Ask me anything code-related!",
+    },
   ]);
   const [input, setInput] = useState("");
 
   const handleSend = () => {
-    if (!input.trim()) return;
+    const trimmedInput = input.trim();
+    if (!trimmedInput) return;
 
-    const newUserMessage: Message = { role: "user", text: input };
-    const newBotMessage: Message = {
-      role: "assistant",
-      text: `You said: ${input}`, // Replace this with your logic or API call
-    };
+    const newUserMessage: Message = { role: "user", text: trimmedInput };
+    const botReply: string = getBotResponse(trimmedInput);
+    const newBotMessage: Message = { role: "assistant", text: botReply };
 
-    setMessages([...messages, newUserMessage, newBotMessage]);
+    setMessages((prev) => [...prev, newUserMessage, newBotMessage]);
     setInput("");
   };
 
@@ -36,8 +39,8 @@ export default function ChatBox() {
       </div>
       <div className="flex items-center gap-2">
         <input
-          className="flex-grow p-2 rounded-xl border border-gray-300 focus:outline-none"
           type="text"
+          className="flex-grow p-2 rounded-xl border border-gray-300 focus:outline-none"
           placeholder="Ask me about code..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -46,6 +49,7 @@ export default function ChatBox() {
         <button
           onClick={handleSend}
           className="bg-purple-600 text-white px-4 py-2 rounded-xl hover:bg-purple-700"
+          aria-label="Send message"
         >
           Send
         </button>
